@@ -1,0 +1,11 @@
+
+{
+  "name": "OneSbit V13",
+  "short_name": "OneSbit",
+  "description": "Plateforme de paris et casino en mode démo",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#08120f",
+  "theme_color": "#08120f"
+}

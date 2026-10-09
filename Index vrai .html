@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OneSbit Demo V2</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#f3f4f6;color:#111827}
+header{background:#111827;color:white;padding:15px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:24px;font-weight:bold;color:#22c55e}
+.header-right{display:flex;gap:8px;align-items:center}
+button{cursor:pointer}
+.balance{background:#1f2937;padding:9px;border-radius:8px}
+.login-btn{background:#22c55e;color:white;border:0;padding:9px 13px;border-radius:7px}
+nav{display:flex;gap:8px;background:white;padding:12px;overflow-x:auto;border-bottom:1px solid #ddd}
+nav button{border:0;background:#eee;padding:10px 16px;border-radius:20px;white-space:nowrap}
+nav button.active{background:#22c55e;color:white}
+.container{max-width:1200px;margin:auto;padding:18px;display:grid;grid-template-columns:1fr 350px;gap:18px}
+.banner{background:linear-gradient(135deg,#16a34a,#15803d);color:white;padding:25px;border-radius:14px;margin-bottom:18px}
+.banner h1{margin-bottom:8px}
+.match{background:white;padding:17px;border-radius:12px;margin-bottom:14px;box-shadow:0 2px 8px #0000000d}
+.match-top{display:flex;justify-content:space-between;color:#6b7280;font-size:13px;margin-bottom:13px}
+.live{color:#ef4444;font-weight:bold}
+.teams{text-align:center;font-weight:bold;font-size:17px;margin-bottom:14px}
+.market-title{font-size:13px;font-weight:bold;margin:12px 0 7px}
+.odds{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.odd{border:0;background:#eef2f7;padding:11px 4px;border-radius:7px}
+.odd:hover,.odd.selected{background:#22c55e;color:white}
+.odd strong{display:block;margin-top:4px}
+.bet-slip{background:white;border-radius:12px;padding:18px;height:max-content;position:sticky;top:10px}
+.empty{text-align:center;color:#777;padding:30px 5px}
+.selection{border-bottom:1px solid #eee;padding:12px 0;position:relative}
+.selection strong{display:block}
+.selection small{color:#6b7280}
+.remove{position:absolute;right:0;top:10px;background:none;border:0;color:#ef4444;font-size:20px}
+.stake{width:100%;padding:12px;margin:12px 0;border:1px solid #ccc;border-radius:7px}
+.bet-button{width:100%;background:#22c55e;color:white;border:0;padding:13px;border-radius:8px;font-weight:bold}
+.modal{display:none;position:fixed;inset:0;background:#0008;align-items:center;justify-content:center;z-index:50}
+.modal-box{background:white;width:90%;max-width:400px;border-radius:12px;padding:25px}
+.modal-box h2{margin-bottom:15px}
+.modal-box input{width:100%;padding:12px;margin:7px 0;border:1px solid #ccc;border-radius:7px}
+.modal-box button{width:100%;padding:12px;margin-top:8px;border:0;border-radius:7px;background:#22c55e;color:white}
+.close{background:#6b7280!important}
+.history{background:white;border-radius:12px;padding:18px;margin-top:20px}
+.history-item{padding:12px 0;border-bottom:1px solid #eee}
+@media(max-width:800px){
+.container{grid-template-columns:1fr}
+.bet-slip{position:static}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="logo">OneSbit DEMO</div>
+
+<div class="header-right">
+<div class="balance">
+<span id="balance">100 000</span> GNF
+</div>
+<button class="login-btn" onclick="openLogin()">Connexion</button>
+</div>
+</header>
+
+<nav>
+<button class="active">🏠 Accueil</button>
+<button>🔴 Live</button>
+<button>⚽ Football</button>
+<button>🏀 Basketball</button>
+<button onclick="showHistory()">📜 Mes paris</button>
+</nav>
+
+<div class="container">
+
+<main>
+
+<div class="banner">
+<h1>Bienvenue sur OneSbit</h1>
+<p>Plateforme de paris sportifs — MODE DÉMO</p>
+</div>
+
+<h2 style="margin-bottom:15px">⚽ Football</h2>
+
+<!-- MATCH 1 -->
+<div class="match">
+
+<div class="match-top">
+<span>🇬🇧 Premier League</span>
+<span>20:45</span>
+</div>
+
+<div class="teams">
+Arsenal — Leeds United
+</div>
+
+<div class="market-title">Résultat</div>
+
+<div class="odds">
+
+<button class="odd" onclick="addBet('Arsenal - Leeds','Arsenal gagne',1.45,this)">
+1<strong>1.45</strong>
+</button>
+
+<button class="odd" onclick="addBet('Arsenal - Leeds','Match nul',4.20,this)">
+X<strong>4.20</strong>
+</button>
+
+<button class="odd" onclick="addBet('Arsenal - Leeds','Leeds gagne',6.50,this)">
+2<strong>6.50</strong>
+</button>
+
+</div>
+
+<div class="market-title">Buts</div>
+
+<div class="odds">
+
+<button class="odd" onclick="addBet('Arsenal - Leeds','Plus de 1.5 buts',1.30,this)">
+O 1.5<strong>1.30</strong>
+</button>
+
+<button class="odd" onclick="addBet('Arsenal - Leeds','Plus de 2.5 buts',1.70,this)">
+O 2.5<strong>1.70</strong>
+</button>
+
+<button class="odd" onclick="addBet('Arsenal - Leeds','BTTS Oui',1.65,this)">
+BTTS<strong>1.65</strong>
+</button>
+
+</div>
+</div>
+
+
+<!-- MATCH 2 -->
+<div class="match">
+
+<div class="match-top">
+<span>🇫🇷 Ligue 1</span>
+<span>20:45</span>
+</div>
+
+<div class="teams">
+Monaco — Toulouse
+</div>
+
+<div class="market-title">Résultat</div>
+
+<div class="odds">
+
+<button class="odd" onclick="addBet('Monaco - Toulouse','Monaco gagne',1.65,this)">
+1<strong>1.65</strong>
+</button>
+
+<button class="odd" onclick="addBet('Monaco - Toulouse','Match nul',3.80,this)">
+X<strong>3.80</strong>
+</button>
+
+<button class="odd" onclick="addBet('Monaco - Toulouse','Toulouse gagne',4.90,this)">
+2<strong>4.90</strong>
+</button>
+
+</div>
+
+<div class="market-title">Buts</div>
+
+<div class="odds">
+
+<button class="odd" onclick="addBet('Monaco - Toulouse','Plus de 1.5 buts',1.35,this)">
+O 1.5<strong>1.35</strong>
+</button>
+
+<button class="odd" onclick="addBet('Monaco - Toulouse','Plus de 2.5 buts',1.80,this)">
+O 2.5<strong>1.80</strong>
+</button>
+
+<button class="odd" onclick="addBet('Monaco - Toulouse','BTTS Oui',1.72,this)">
+BTTS<strong>1.72</strong>
+</button>
+
+</div>
+</div>
+
+
+<!-- MATCH LIVE -->
+<div class="match">
+
+<div class="match-top">
+<span class="live">🔴 LIVE 63'</span>
+<span>🇮🇹 Serie A</span>
+</div>
+
+<div class="teams">
+Lazio 1 — 0 Monza
+</div>
+
+<div class="market-title">Résultat</div>
+
+<div class="odds">
+
+<button class="odd" onclick="addBet('Lazio - Monza','Lazio gagne',1.25,this)">
+1<strong>1.25</strong>
+</button>
+
+<button class="odd" onclick="addBet('Lazio - Monza','Match nul',5.00,this)">
+X<strong>5.00</strong>
+</button>
+
+<button class="odd" onclick="addBet('Lazio - Monza','Monza gagne',9.00,this)">
+2<strong>9.00</strong>
+</button>
+
+</div>
+</div>
+
+
+<div class="history" id="history">
+<h2>📜 Historique</h2>
+<p style="color:#777;margin-top:10px">
+Aucun pari pour le moment.
+</p>
+</div>
+
+</main>
+
+
+<!-- COUPON -->
+
+<aside class="bet-slip">
+
+<h2>🎟️ Coupon</h2>
+
+<div id="selections">
+
+<div class="empty">
+Sélectionne une cote.
+</div>
+
+</div>
+
+<hr style="margin:15px 0">
+
+<div style="display:flex;justify-content:space-between">
+<span>Cote totale</span>
+<strong id="totalOdds">0.00</strong>
+</div>
+
+<label style="display:block;margin-top:15px">
+Mise fictive
+</label>
+
+<input
+id="stake"
+class="stake"
+type="number"
+value="5000"
+min="0"
+oninput="calculate()">
+
+<div style="display:flex;justify-content:space-between;margin-bottom:12px">
+<span>Gain potentiel</span>
+<strong id="potential">0 GNF</strong>
+</div>
+
+<button class="bet-button" onclick="placeBet()">
+PARIER EN MODE DÉMO
+</button>
+
+</aside>
+
+</div>
+
+
+<!-- CONNEXION -->
+
+<div class="modal" id="loginModal">
+
+<div class="modal-box">
+
+<h2>👤 Connexion</h2>
+
+<input
+id="email"
+type="email"
+placeholder="Email">
+
+<input
+id="password"
+type="password"
+placeholder="Mot de passe">
+
+<button onclick="login()">
+Se connecter
+</button>
+
+<button onclick="register()">
+Créer un compte démo
+</button>
+
+<button class="close" onclick="closeLogin()">
+Fermer
+</button>
+
+</div>
+</div>
+
+
+<script>
+
+let bets = [];
+
+let balance = 100000;
+
+let history = [];
+
+let user = null;
+
+
+/* CONNEXION */
+
+function openLogin(){
+document.getElementById("loginModal").style.display="flex";
+}
+
+function closeLogin(){
+document.getElementById("loginModal").style.display="none";
+}
+
+
+function register(){
+
+let email =
+document.getElementById("email").value;
+
+let password =
+document.getElementById("password").value;
+
+if(!email || !password){
+
+alert("Entre un email et un mot de passe.");
+
+return;
+}
+
+user = {
+email: email
+};
+
+alert("Compte démo créé avec succès !");
+
+closeLogin();
+
+document.querySelector(".login-btn").textContent="Mon compte";
+
+}
+
+
+function login(){
+
+let email =
+document.getElementById("email").value;
+
+let password =
+document.getElementById("password").value;
+
+if(!email || !password){
+
+alert("Entre ton email et ton mot de passe.");
+
+return;
+}
+
+user = {
+email: email
+};
+
+alert("Connexion réussie !");
+
+closeLogin();
+
+document.querySelector(".login-btn").textContent="Mon compte";
+
+}
+
+
+/* PARIS */
+
+function addBet(match, selection, odds, button){
+
+let existing =
+bets.findIndex(b => b.match === match);
+
+if(existing !== -1){
+
+bets.splice(existing,1);
+
+}
+
+bets.push({
+match,
+selection,
+odds
+});
+
+document
+.querySelectorAll(".odd")
+.forEach(b => b.classList.remove("selected"));
+
+button.classList.add("selected");
+
+renderBets();
+
+calculate();
+
+}
+
+
+function renderBets(){
+
+let container =
+document.getElementById("selections");
+
+if(bets.length === 0){
+
+container.innerHTML=
+'<div class="empty">Sélectionne une cote.</div>';
+
+return;
+
+}
+
+container.innerHTML="";
+
+bets.forEach((bet,index)=>{
+
+let div =
+document.createElement("div");
+
+div.className="selection";
+
+div.innerHTML=`
+
+<button class="remove"
+onclick="removeBet(${index})">×</button>
+
+<strong>${bet.match}</strong>
+
+<small>
+${bet.selection} — ${bet.odds}
+</small>
+`;
+
+container.appendChild(div);
+
+});
+
+}
+
+
+function removeBet(index){
+
+bets.splice(index,1);
+
+renderBets();
+
+calculate();
+
+}
+
+
+function calculate(){
+
+let total=1;
+
+bets.forEach(bet=>{
+total*=bet.odds;
+});
+
+if(bets.length===0){
+total=0;
+}
+
+document.getElementById("totalOdds")
+.textContent=total.toFixed(2);
+
+let stake=
+Number(document.getElementById("stake").value)||0;
+
+let potential=
+stake*total;
+
+document.getElementById("potential")
+.textContent=
+potential.toLocaleString("fr-FR")+" GNF";
+
+}
+
+
+function placeBet(){
+
+if(!user){
+
+alert("Connecte-toi d'abord avec ton compte démo.");
+
+openLogin();
+
+return;
+
+}
+
+if(bets.length===0){
+
+alert("Sélectionne au moins une cote.");
+
+return;
+
+}
+
+let stake=
+Number(document.getElementById("stake").value);
+
+if(stake<=0){
+
+alert("Entre une mise.");
+
+return;
+
+}
+
+if(stake>balance){
+
+alert("Solde fictif insuffisant.");
+
+return;
+
+}
+
+let total=1;
+
+bets.forEach(bet=>{
+total*=bet.odds;
+});
+
+let potential=stake*total;
+
+balance-=stake;
+
+document.getElementById("balance")
+.textContent=
+balance.toLocaleString("fr-FR");
+
+history.unshift({
+
+date:new Date().toLocaleString("fr-FR"),
+
+bets:[...bets],
+
+stake:stake,
+
+potential:potential
+
+});
+
+bets=[];
+
+renderBets();
+
+calculate();
+
+showHistory();
+
+alert(
+"Pari démo enregistré !\n\n"+
+"Gain potentiel : "+
+potential.toLocaleString("fr-FR")+
+" GNF"
+);
+
+}
+
+
+function showHistory(){
+
+let box=
+document.getElementById("history");
+
+if(history.length===0){
+
+box.innerHTML=`
+
+<h2>📜 Historique</h2>
+
+<p style="color:#777;margin-top:10px">
+Aucun pari pour le moment.
+</p>
+
+`;
+
+return;
+
+}
+
+box.innerHTML="<h2>📜 Historique</h2>";
+
+history.forEach(item=>{
+
+let div=
+document.createElement("div");
+
+div.className="history-item";
+
+let selections=
+item.bets
+.map(b=>b.selection)
+.join(" + ");
+
+div.innerHTML=`
+
+<strong>${selections}</strong>
+
+<br>
+
+<small>
+Mise : ${item.stake.toLocaleString("fr-FR")} GNF
+<br>
+Gain potentiel :
+${item.potential.toLocaleString("fr-FR")} GNF
+<br>
+${item.date}
+</small>
+
+`;
+
+box.appendChild(div);
+
+});
+
+}
+
+
+calculate();
+
+</script>
+
+</body>
+</html>
